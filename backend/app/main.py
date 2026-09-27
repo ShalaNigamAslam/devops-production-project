@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from app.database import SessionLocal
+
 from app.models import User
 
 app = FastAPI()
@@ -13,6 +13,7 @@ def health():
 
 @app.get("/users")
 def users():
+    from app.database import SessionLocal
     db = SessionLocal()
 
     try:
