@@ -12,8 +12,7 @@ jobs:
       - name: Start services
         run: docker compose up -d
 
-      - name: Check services
-        run: docker compose ps
+      
 
       - name: Initialize database
         run: docker compose exec backend python -c "from app.database import engine; from app.models import Base; Base.metadata.create_all(engine)"
