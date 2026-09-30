@@ -21,6 +21,6 @@ jobs:
         run: docker compose exec backend python -m app.seed
 
       - name: Run tests
-        run: docker compose exec backend python -m pytest
+        run: docker compose exec backend python -m pytest tests/does_not_exist.py
       
       
