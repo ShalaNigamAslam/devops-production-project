@@ -23,7 +23,7 @@ services:
   backend:
     build:
       context: ./backend
-    image: devops-fastapi:latest
+    image: devops-fastapi:${IMAGE_TAG:-latest}
     depends_on:
       mysql:
         condition: service_healthy
