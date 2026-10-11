@@ -26,6 +26,13 @@ jobs:
       - name: Check services
         run: docker compose ps
 
+      - name: Diagnose MySQL if schema initialization fails
+        if: failure()
+        run: |
+          docker compose ps -a
+          docker compose logs --no-color mysql
+          docker compose logs --no-color backend
+
       - name: Initialize database
         run: docker compose exec backend python -c "from app.database import engine; from app.models import Base; Base.metadata.create_all(engine)"
 
