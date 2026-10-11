@@ -1,12 +1,21 @@
 name: CI
+
 on:
   push:
+    branches:
+      - main
   pull_request:
+
+permissions:
+  contents: read
+  packages: write
+
 jobs:
   test:
     runs-on: ubuntu-latest
     env:
       IMAGE_TAG: ${{ github.sha }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -15,7 +24,7 @@ jobs:
         run: docker compose up -d
 
       - name: Check services
-        run: docker compose ps      
+        run: docker compose ps
 
       - name: Initialize database
         run: docker compose exec backend python -c "from app.database import engine; from app.models import Base; Base.metadata.create_all(engine)"
@@ -24,5 +33,16 @@ jobs:
         run: docker compose exec backend python -m app.seed
 
       - name: Run tests
-        run: docker compose exec backend python -m pytest      
-      
+        run: docker compose exec backend python -m pytest
+
+      - name: Log in to GitHub Container Registry
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+
+      - name: Push tested image
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: docker compose push backend
+
+      - name: Log out of GitHub Container Registry
+        if: always() && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: docker logout ghcr.io
