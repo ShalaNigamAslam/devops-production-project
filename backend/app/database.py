@@ -1,4 +1,5 @@
 import os
+from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
 from sqlalchemy.engine import URL
 
@@ -20,4 +21,10 @@ DATABASE_URL = URL.create(
 engine = create_engine(
     DATABASE_URL,
     connect_args={"connect_timeout": 5},
+)
+
+SessionLocal = sessionmaker(
+    autocommit=False,
+    autoflush=False,
+    bind=engine,
 )
