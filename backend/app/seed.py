@@ -3,12 +3,17 @@ from app.models import User
 
 db = SessionLocal()
 
-user = User(name="Alice")
+try:
+    user = db.query(User).filter(User.name == "Carey").first()
 
-db.add(user)
-db.commit()
-db.refresh(user)
+    if user is None:
+        user = User(name="Carey")
+        db.add(user)
+        db.commit()
+        db.refresh(user)
+        print(f"Created user: {user.id} - {user.name}")
+    else:
+        print("Carey already exists; skipping insert.")
 
-print(f"Created user: {user.id} - {user.name}")
-
-db.close()
+finally:
+    db.close()

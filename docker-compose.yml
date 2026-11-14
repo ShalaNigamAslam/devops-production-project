@@ -4,17 +4,19 @@ services:
     image: mysql:8.4
     container_name: project-mysql
     environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?Set MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: appdb
       MYSQL_USER: appuser
-      MYSQL_PASSWORD: apppassword
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?Set MYSQL_PASSWORD}
     ports:
       - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
 
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-P", "3306", "-uappuser", "-papppassword"]
+      test:
+        - CMD-SHELL
+        - 'mysqladmin ping -h 127.0.0.1 -P 3306 -uappuser -p"$${MYSQL_PASSWORD}" --silent'
       interval: 5s
       timeout: 5s
       retries: 10
@@ -33,9 +35,9 @@ services:
       DB_HOST: mysql
       DB_PORT: 3306
       DB_USER: appuser
-      DB_PASSWORD: apppassword
+      DB_PASSWORD: ${MYSQL_PASSWORD:?Set MYSQL_PASSWORD}
       DB_NAME: appdb
 
 
 volumes:
-  mysql_data:  
+  mysql_data:

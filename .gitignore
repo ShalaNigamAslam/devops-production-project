@@ -1,4 +1,26 @@
+
+# Python
 .venv/
 __pycache__/
-*.pyc
+*.py[cod]
+*$py.class
+
+# Environment and secrets
 .env
+.env.*
+!.env.example
+
+# Test and coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Python tooling
+.mypy_cache/
+.ruff_cache/
+
+# IDE and operating system
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

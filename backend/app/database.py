@@ -28,3 +28,23 @@ SessionLocal = sessionmaker(
     autoflush=False,
     bind=engine,
 )
+
+TEST_DATABASE_URL = URL.create(
+    drivername="mysql+pymysql",
+    username=DB_USER,
+    password=DB_PASSWORD,
+    host=DB_HOST,
+    port=DB_PORT,
+    database="test_appdb",
+)
+
+test_engine = create_engine(
+    TEST_DATABASE_URL,
+    connect_args={"connect_timeout": 5},
+)
+
+TestSessionLocal = sessionmaker(
+    autocommit=False,
+    autoflush=False,
+    bind=test_engine,
+)
