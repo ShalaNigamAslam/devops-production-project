@@ -21,6 +21,9 @@ def get_db():
 def health():
     return {"status": "ok"}
 
+@app.get("/version")
+def version():
+    return {"version": "v2"}
 
 @app.get("/ready")
 def readiness():
